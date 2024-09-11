@@ -6,6 +6,11 @@ x-logging:
     max-file: "3"
 
 services:
+  proxy:
+    image: ghcr.io/mutinywallet/ln-websocket-proxy:latest
+    container_name: "proxy"
+    restart: unless-stopped
+
   postgres:
     image: postgres:15@sha256:546445ad21cb5893c0997080b831ee45945e798c4359270e16413c8bd93575db
     container_name: "postgres"
@@ -39,7 +44,7 @@ services:
     logging: *default-logging
 
   nginx:
-    container_name: "nginx"
+    container_name: "mutiny-nginx"
     image: nginx:1.21-alpine@sha256:686aac2769fd6e7bab67663fd38750c135b72d993d0bb0a942ab02ef647fc9c3
     logging: *default-logging
     init: true
@@ -71,7 +76,7 @@ services:
 
   # docker build of testnet4 fork: https://github.com/Impa10r/lnd
   lnd:
-    container_name: "lnd"
+    container_name: "mutiny-lnd"
     image: benthecarman/lnd:testnet4@sha256:9f3308423212a8688a2fdfc8f83ee92f3570c4c24615b5c650dda0a7eb9f3a48
     logging: *default-logging
     restart: always
@@ -137,4 +142,4 @@ services:
       - BITCOIN_REST_DOMAIN=bitcoind
       - BITCOIN_REST_PORT=48332
       - BITCOIN_REST_PATH=/rest/
-      - LN_PEERS=033c840a8be47ae5d7384be37a35535b916f4e14c9b0efad1f65db6ec474427a1f@lnd:9735 # lnd's node id, YOU NEED TO CHANGE THIS TO YOUR NODE ID
+      - LN_PEERS=03138a8477612e10b2e3d3bfccfcd80457d03023dc620e3637333af481a085101e@lnd:9735 # lnd's node id, YOU NEED TO CHANGE THIS TO YOUR NODE ID
